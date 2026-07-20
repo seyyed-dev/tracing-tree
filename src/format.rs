@@ -222,10 +222,8 @@ impl Buffers {
         if config.indent_lines {
             self.current_buf.push('\n');
 
-            match style {
-                SpanMode::Close { .. } | SpanMode::PostClose
-                    if indent > 0 && (indent + 1) % config.wraparound == 0 =>
-                {
+            if let SpanMode::Close { .. } | SpanMode::PostClose = style {
+                if indent > 0 && (indent + 1) % config.wraparound == 0 {
                     self.indent_buf.push_str(&prefix);
                     for _ in 0..(indent % config.wraparound * config.indent_amount) {
                         self.indent_buf.push_str(LINE_HORIZ);
@@ -233,7 +231,6 @@ impl Buffers {
                     self.indent_buf.push_str(LINE_OPEN);
                     self.indent_buf.push('\n');
                 }
-                _ => {}
             }
         }
 
